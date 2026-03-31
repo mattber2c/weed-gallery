@@ -85,16 +85,6 @@
             margin-bottom: 10px;
         }
 
-        .card-description {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
         .card-meta {
             display: flex;
             justify-content: space-between;
@@ -224,6 +214,7 @@
     </header>
 
     <div class="container">
+        <!-- Gallery -->
         <div id="gallery" class="gallery">
             <div class="loading">
                 <div class="loading-spinner"></div>
@@ -231,10 +222,12 @@
             </div>
         </div>
 
+        <!-- Banner Section -->
         <div class="banner-section">
             <img src="https://drive.google.com/uc?export=view&id=1UB_vZ-5q4mV3Y8qR9zK2pL1mN4oP5qR6s" alt="University of Arkansas Division of Agriculture" class="banner-image">
         </div>
 
+        <!-- Contact Section -->
         <div class="contact-section">
             <h3>Contact Information</h3>
             <div class="contact-info">
@@ -256,6 +249,13 @@
         
         // ===== DATA STORAGE =====
         let allData = [];
+        let manualSubmissions = [];
+
+        // Load manual submissions from localStorage
+        function loadManualSubmissions() {
+            const stored = localStorage.getItem('weedGallerySubmissions');
+            manualSubmissions = stored ? JSON.parse(stored) : [];
+        }
 
         // Convert Google Drive file ID to viewable image URL
         function getImageUrl(fileId) {
@@ -276,68 +276,70 @@
                 const result = await response.json();
                 
                 if (!result.values || result.values.length < 2) {
-                    showEmpty();
-                    return;
-                }
+                    allData = [];
+                } else {
+                    // Parse headers
+                    const headers = result.values[0];
+                    const weedPhotoIndex = headers.findIndex(h => h && h.toLowerCase().includes('upload'));
+                    const weedNameIndex = headers.findIndex(h => h && h.toLowerCase().includes('weed is this'));
+                    const locationIndex = headers.findIndex(h => h && h.toLowerCase().includes('where'));
+                    const descriptionIndex = headers.findIndex(h => h && h.toLowerCase().includes('details'));
+                    const authorIndex = headers.findIndex(h => h && h.toLowerCase().includes('name'));
+                    const approvedIndex = headers.findIndex(h => h && h === 'Approved');
+                    const timestampIndex = 0;
 
-                // Parse headers
-                const headers = result.values[0];
-                const weedPhotoIndex = headers.findIndex(h => h && h.toLowerCase().includes('upload'));
-                const weedNameIndex = headers.findIndex(h => h && h.toLowerCase().includes('weed is this'));
-                const locationIndex = headers.findIndex(h => h && h.toLowerCase().includes('where'));
-                const descriptionIndex = headers.findIndex(h => h && h.toLowerCase().includes('details'));
-                const authorIndex = headers.findIndex(h => h && h.toLowerCase().includes('name'));
-                const approvedIndex = headers.findIndex(h => h && h === 'Approved');
-                const timestampIndex = 0;
-
-                // Parse rows - only approved ones
-                allData = [];
-                for (let i = 1; i < result.values.length; i++) {
-                    const row = result.values[i];
-                    const approved = row[approvedIndex] && row[approvedIndex].trim().toUpperCase() === 'YES';
-                    const fileId = row[weedPhotoIndex] ? extractFileId(row[weedPhotoIndex]) : null;
-                    
-                    if (approved && fileId) {
-                        const timestamp = row[timestampIndex] || new Date().toISOString();
-                        const imageUrl = getImageUrl(fileId);
+                    // Parse rows - only approved ones
+                    allData = [];
+                    for (let i = 1; i < result.values.length; i++) {
+                        const row = result.values[i];
+                        const approved = row[approvedIndex] && row[approvedIndex].trim().toUpperCase() === 'YES';
+                        const fileId = row[weedPhotoIndex] ? extractFileId(row[weedPhotoIndex]) : null;
                         
-                        allData.push({
-                            timestamp: timestamp,
-                            imageUrl: imageUrl,
-                            weedName: row[weedNameIndex]?.trim() || 'Unknown Weed',
-                            location: row[locationIndex]?.trim() || 'Location not specified',
-                            description: row[descriptionIndex]?.trim() || 'No description provided',
-                            author: row[authorIndex]?.trim() || 'Anonymous',
-                            date: new Date(timestamp).toLocaleDateString('en-US', { 
-                                year: 'numeric', 
-                                month: 'short', 
-                                day: 'numeric' 
-                            })
-                        });
+                        if (approved && fileId) {
+                            const timestamp = row[timestampIndex] || new Date().toISOString();
+                            const imageUrl = getImageUrl(fileId);
+                            
+                            allData.push({
+                                timestamp: timestamp,
+                                imageUrl: imageUrl,
+                                weedName: row[weedNameIndex]?.trim() || 'Unknown Weed',
+                                location: row[locationIndex]?.trim() || 'Location not specified',
+                                author: row[authorIndex]?.trim() || 'Anonymous',
+                                date: new Date(timestamp).toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                })
+                            });
+                        }
                     }
                 }
 
-                if (allData.length === 0) {
+                // Combine with manual submissions (manual first)
+                const combinedData = [...manualSubmissions, ...allData];
+                
+                if (combinedData.length === 0) {
                     showEmpty();
-                    return;
+                } else {
+                    renderGallery(combinedData);
                 }
-
-                // Sort by newest first
-                allData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-                // Render gallery
-                renderGallery();
             } catch (error) {
                 console.error('Error loading data:', error);
-                showError('Could not load data.');
+                // Still show manual submissions even if Google Sheets fails
+                if (manualSubmissions.length > 0) {
+                    renderGallery(manualSubmissions);
+                } else {
+                    showError('Could not load data.');
+                }
             }
         }
 
         // ===== RENDER GALLERY =====
-        function renderGallery() {
+        function renderGallery(data = null) {
             const gallery = document.getElementById('gallery');
+            const displayData = data || [...manualSubmissions, ...allData];
 
-            if (allData.length === 0) {
+            if (displayData.length === 0) {
                 gallery.innerHTML = `
                     <div class="empty-state" style="grid-column: 1 / -1;">
                         <div class="empty-state-icon">🌾</div>
@@ -347,13 +349,12 @@
                 return;
             }
 
-            gallery.innerHTML = allData.map((item) => `
+            gallery.innerHTML = displayData.map((item) => `
                 <div class="gallery-card">
                     <img src="${item.imageUrl}" alt="${item.weedName}" class="card-image" loading="lazy">
                     <div class="card-content">
                         <div class="card-title">${item.weedName}</div>
                         <div class="card-location">📍 ${item.location}</div>
-                        ${item.description ? `<div class="card-description">${item.description}</div>` : ''}
                         <div class="card-meta">
                             <span class="card-author">${item.author}</span>
                             <span>${item.date}</span>
@@ -382,7 +383,8 @@
             `;
         }
 
-        // Load data on page load
+        // Load on page load
+        loadManualSubmissions();
         window.addEventListener('load', loadData);
 
         // Auto-refresh every 30 seconds
