@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Weed Submissions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: #a52a2a;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid #7a1f1f;
+            margin-bottom: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9em;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #a52a2a;
+        }
+
+        .admin-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #a52a2a;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #a52a2a;
+            box-shadow: 0 0 0 3px rgba(165, 42, 42, 0.1);
+        }
+
+        .drop-zone {
+            border: 3px dashed #a52a2a;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover {
+            background: #f0f0f0;
+        }
+
+        .drop-zone.drag-over {
+            background: #ffe6e6;
+            border-color: #7a1f1f;
+        }
+
+        .drop-zone-text {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .drop-zone-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        #imagePreview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .admin-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1em;
+            transition: background 0.3s;
+            flex: 1;
+        }
+
+        .submit-btn {
+            background: #a52a2a;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #7a1f1f;
+        }
+
+        .reset-btn {
+            background: #ddd;
+            color: #333;
+        }
+
+        .reset-btn:hover {
+            background: #ccc;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #28a745;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #f5c6cb;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Submissions List */
+        .submissions-list {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+
+        .submissions-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .submission-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .submission-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .submission-info {
+            flex: 1;
+        }
+
+        .submission-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .submission-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            color: #999;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #a52a2a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .admin-buttons {
+                flex-direction: column;
+            }
+
+            .submission-item {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Add Weed Submission</h1>
+        <p class="subtitle">Admin Panel</p>
+    </header>
+
+    <div class="container">
+        <!-- Admin Panel -->
+        <div class="admin-panel">
+            <div class="admin-title">📝 New Submission</div>
+            
+            <div class="success-message" id="successMessage">
+                ✓ Submission added successfully!
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="adminForm">
+                <!-- Drag and Drop Image -->
+                <div class="form-group">
+                    <label>Image *</label>
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-zone-icon">📸</div>
+                        <div class="drop-zone-text">Drag and drop image here or click to upload</div>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                        <img id="imagePreview" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Weed Name -->
+                <div class="form-group">
+                    <label for="weedName">Weed Name *</label>
+                    <input type="text" id="weedName" name="weedName" required placeholder="e.g., Dandelion">
+                </div>
+
+                <!-- Submitter Name -->
+                <div class="form-group">
+                    <label for="submitterName">Submitter Name *</label>
+                    <input type="text" id="submitterName" name="submitterName" required placeholder="Your name">
+                </div>
+
+                <!-- County -->
+                <div class="form-group">
+                    <label for="county">County *</label>
+                    <select id="county" name="county" required>
+                        <option value="">Select a county...</option>
+                        <option value="Adair">Adair</option>
+                        <option value="Arkansas">Arkansas</option>
+                        <option value="Ashley">Ashley</option>
+                        <option value="Baxter">Baxter</option>
+                        <option value="Benton">Benton</option>
+                        <option value="Berniers">Berniers</option>
+                        <option value="Boone">Boone</option>
+                        <option value="Bradley">Bradley</option>
+                        <option value="Calhoun">Calhoun</option>
+                        <option value="Carroll">Carroll</option>
+                        <option value="Chicot">Chicot</option>
+                        <option value="Clark">Clark</option>
+                        <option value="Clay">Clay</option>
+                        <option value="Cleburne">Cleburne</option>
+                        <option value="Cleveland">Cleveland</option>
+                        <option value="Columbia">Columbia</option>
+                        <option value="Conway">Conway</option>
+                        <option value="Craighead">Craighead</option>
+                        <option value="Crawford">Crawford</option>
+                        <option value="Crittenden">Crittenden</option>
+                        <option value="Cross">Cross</option>
+                        <option value="Dallas">Dallas</option>
+                        <option value="Desha">Desha</option>
+                        <option value="Drew">Drew</option>
+                        <option value="Dunklin">Dunklin</option>
+                        <option value="Faulkner">Faulkner</option>
+                        <option value="Franklin">Franklin</option>
+                        <option value="Fulton">Fulton</option>
+                        <option value="Garland">Garland</option>
+                        <option value="Grant">Grant</option>
+                        <option value="Greene">Greene</option>
+                        <option value="Grenada">Grenada</option>
+                        <option value="Hempstead">Hempstead</option>
+                        <option value="Hot Spring">Hot Spring</option>
+                        <option value="Howard">Howard</option>
+                        <option value="Independence">Independence</option>
+                        <option value="Izard">Izard</option>
+                        <option value="Jackson">Jackson</option>
+                        <option value="Jefferson">Jefferson</option>
+                        <option value="Johnson">Johnson</option>
+                        <option value="Lafayette">Lafayette</option>
+                        <option value="Lawrence">Lawrence</option>
+                        <option value="Lee">Lee</option>
+                        <option value="Lincoln">Lincoln</option>
+                        <option value="Litle River">Litle River</option>
+                        <option value="Logan">Logan</option>
+                        <option value="Lonoke">Lonoke</option>
+                        <option value="Madison">Madison</option>
+                        <option value="Marion">Marion</option>
+                        <option value="Miller">Miller</option>
+                        <option value="Mississippi">Mississippi</option>
+                        <option value="Monroe">Monroe</option>
+                        <option value="Montgomery">Montgomery</option>
+                        <option value="Nevada">Nevada</option>
+                        <option value="Newton">Newton</option>
+                        <option value="Ouachita">Ouachita</option>
+                        <option value="Oxford">Oxford</option>
+                        <option value="Perry">Perry</option>
+                        <option value="Phillips">Phillips</option>
+                        <option value="Pike">Pike</option>
+                        <option value="Poinsett">Poinsett</option>
+                        <option value="Polk">Polk</option>
+                        <option value="Pope">Pope</option>
+                        <option value="Prairie">Prairie</option>
+                        <option value="Pulaski">Pulaski</option>
+                        <option value="Randolph">Randolph</option>
+                        <option value="Saline">Saline</option>
+                        <option value="Scott">Scott</option>
+                        <option value="Searcy">Searcy</option>
+                        <option value="Sebastian">Sebastian</option>
+                        <option value="Sevier">Sevier</option>
+                        <option value="Sharp">Sharp</option>
+                        <option value="St Francis">St Francis</option>
+                        <option value="Stone">Stone</option>
+                        <option value="Union">Union</option>
+                        <option value="Van Buren">Van Buren</option>
+                        <option value="Washington">Washington</option>
+                        <option value="White">White</option>
+                        <option value="Woodruff">Woodruff</option>
+                        <option value="Yell">Yell</option>
+                    </select>
+                </div>
+
+                <!-- Date -->
+                <div class="form-group">
+                    <label for="submissionDate">Date Found *</label>
+                    <input type="date" id="submissionDate" name="submissionDate" required>
+                </div>
+
+                <div class="admin-buttons">
+                    <button type="submit" class="admin-btn submit-btn">Add Submission</button>
+                    <button type="reset" class="admin-btn reset-btn">Clear Form</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Submissions List -->
+        <div class="submissions-list">
+            <div class="submissions-title">📌 Your Submissions</div>
+            <div id="submissionsList"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p><a href="index.html" class="back-link">← View Public Gallery</a></p>
+    </footer>
+
+    <script>
+        // ===== DATA STORAGE =====
+        let manualSubmissions = [];
+
+        // Load manual submissions from localStorage
+        function loadManualSubmissions() {
+            const stored = localStorage.getItem('weedGallerySubmissions');
+            manualSubmissions = stored ? JSON.parse(stored) : [];
+            renderSubmissionsList();
+        }
+
+        // Save manual submissions to localStorage
+        function saveManualSubmissions() {
+            localStorage.setItem('weedGallerySubmissions', JSON.stringify(manualSubmissions));
+        }
+
+        // ===== DRAG AND DROP FUNCTIONALITY =====
+        const dropZone = document.getElementById('dropZone');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        dropZone.addEventListener('click', () => imageInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleImageUpload(files[0]);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleImageUpload(e.target.files[0]);
+            }
+        });
+
+        function handleImageUpload(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+                imageInput.dataset.imageData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ===== FORM SUBMISSION =====
+        document.getElementById('adminForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const errorMsg = document.getElementById('errorMessage');
+            const successMsg = document.getElementById('successMessage');
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+
+            const imageData = imageInput.dataset.imageData;
+            const weedName = document.getElementById('weedName').value;
+            const submitterName = document.getElementById('submitterName').value;
+            const county = document.getElementById('county').value;
+            const submissionDate = document.getElementById('submissionDate').value;
+
+            if (!imageData || !weedName || !submitterName || !county || !submissionDate) {
+                errorMsg.textContent = '⚠️ Please fill in all fields and upload an image';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            // Create new submission
+            const newSubmission = {
+                id: Date.now(),
+                imageUrl: imageData,
+                weedName: weedName,
+                location: county,
+                author: submitterName,
+                date: new Date(submissionDate).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                }),
+                timestamp: new Date(submissionDate).toISOString()
+            };
+
+            // Add to manual submissions
+            manualSubmissions.unshift(newSubmission);
+            saveManualSubmissions();
+
+            // Show success message
+            successMsg.classList.add('show');
+            setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+            // Reset form
+            document.getElementById('adminForm').reset();
+            imagePreview.style.display = 'none';
+            delete imageInput.dataset.imageData;
+
+            // Reload submissions list
+            renderSubmissionsList();
+        });
+
+        // ===== RENDER SUBMISSIONS LIST =====
+        function renderSubmissionsList() {
+            const list = document.getElementById('submissionsList');
+
+            if (manualSubmissions.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center;">No submissions yet</p>';
+                return;
+            }
+
+            list.innerHTML = manualSubmissions.map(submission => `
+                <div class="submission-item">
+                    <img src="${submission.imageUrl}" alt="${submission.weedName}" class="submission-image">
+                    <div class="submission-info">
+                        <div class="submission-name">${submission.weedName}</div>
+                        <div class="submission-details">📍 ${submission.location}</div>
+                        <div class="submission-details">👤 ${submission.author}</div>
+                        <div class="submission-details">📅 ${submission.date}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteSubmission(${submission.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // ===== DELETE SUBMISSION =====
+        function deleteSubmission(id) {
+            if (confirm('Are you sure you want to delete this submission?')) {
+                manualSubmissions = manualSubmissions.filter(s => s.id !== id);
+                saveManualSubmissions();
+                renderSubmissionsList();
+            }
+        }
+
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('submissionDate').value = today;
+
+        // Load on page load
+        loadManualSubmissions();
+    </script>
+</body>
+</html>
