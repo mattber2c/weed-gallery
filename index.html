@@ -43,87 +43,6 @@
         .subtitle {
             color: #666;
             font-size: 1.1em;
-            margin-bottom: 20px;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #10b981;
-        }
-
-        .stat-label {
-            color: #999;
-            font-size: 0.9em;
-        }
-
-        /* Controls */
-        .controls {
-            background: white;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .sort-select {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
-            background: white;
-            cursor: pointer;
-        }
-
-        .refresh-btn {
-            padding: 12px 20px;
-            background: #10b981;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        .refresh-btn:hover {
-            background: #059669;
-        }
-
-        .refresh-btn.loading {
-            opacity: 0.7;
-            pointer-events: none;
         }
 
         /* Gallery Grid */
@@ -140,7 +59,6 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
         }
 
         .gallery-card:hover {
@@ -196,120 +114,6 @@
             font-style: italic;
         }
 
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: white;
-            padding: 0;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 5px 40px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-        }
-
-        .modal-body {
-            padding: 30px;
-        }
-
-        .modal-title {
-            font-size: 2em;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .modal-meta {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .meta-item {
-            font-size: 0.9em;
-        }
-
-        .meta-label {
-            color: #999;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .meta-value {
-            color: #333;
-            font-size: 1.1em;
-        }
-
-        .modal-description {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5em;
-            transition: background 0.3s;
-        }
-
-        .modal-close:hover {
-            background: rgba(0,0,0,0.7);
-        }
-
         /* Loading State */
         .loading {
             text-align: center;
@@ -355,26 +159,6 @@
             margin-top: 40px;
         }
 
-        .submit-link {
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        .submit-btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #10b981;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        .submit-btn:hover {
-            background: #059669;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -385,24 +169,6 @@
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 15px;
             }
-
-            .controls {
-                flex-direction: column;
-            }
-
-            .search-box,
-            .sort-select {
-                width: 100%;
-            }
-
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .modal-meta {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -410,35 +176,9 @@
     <header>
         <h1>🌱 Weed Gallery</h1>
         <p class="subtitle">Community-powered weed identification</p>
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number" id="total-count">0</div>
-                <div class="stat-label">Weeds Identified</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number" id="location-count">0</div>
-                <div class="stat-label">Locations</div>
-            </div>
-        </div>
     </header>
 
     <div class="container">
-        <div class="controls">
-            <input 
-                type="text" 
-                class="search-box" 
-                id="search" 
-                placeholder="Search by weed name or location..."
-            >
-            <select class="sort-select" id="sort">
-                <option value="date-desc">Newest first</option>
-                <option value="date-asc">Oldest first</option>
-                <option value="name-asc">Name (A-Z)</option>
-                <option value="name-desc">Name (Z-A)</option>
-            </select>
-            <button class="refresh-btn" id="refresh-btn">🔄 Refresh</button>
-        </div>
-
         <div id="gallery" class="gallery">
             <div class="loading">
                 <div class="loading-spinner"></div>
@@ -447,39 +187,8 @@
         </div>
     </div>
 
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <img id="modal-image" class="modal-image" alt="Weed image">
-            <div class="modal-body">
-                <h2 class="modal-title" id="modal-title"></h2>
-                <div class="modal-meta">
-                    <div class="meta-item">
-                        <div class="meta-label">Location</div>
-                        <div class="meta-value" id="modal-location"></div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">Submitted</div>
-                        <div class="meta-value" id="modal-date"></div>
-                    </div>
-                </div>
-                <div class="meta-item" style="margin-bottom: 20px;">
-                    <div class="meta-label">Submitted by</div>
-                    <div class="meta-value" id="modal-author"></div>
-                </div>
-                <div class="modal-description" id="modal-description"></div>
-            </div>
-        </div>
-    </div>
-
     <footer>
         <p>Help us identify weeds in your area!</p>
-        <div class="submit-link">
-            <a href="#" class="submit-btn" id="submit-link">Submit a weed photo</a>
-        </div>
-        <p style="margin-top: 20px; font-size: 0.9em;">
-            Data from community submissions • Updated automatically
-        </p>
     </footer>
 
     <script>
@@ -489,9 +198,6 @@
         
         // ===== DATA STORAGE =====
         let allData = [];
-        let displayedData = [];
-        let currentSort = 'date-desc';
-        let currentSearch = '';
 
         // Convert Google Drive file ID to viewable image URL
         function getImageUrl(fileId) {
@@ -500,10 +206,8 @@
         }
 
         // Extract file ID from form response
-        // Google Forms stores file IDs in the format: "fileId"
         function extractFileId(cellValue) {
             if (!cellValue) return null;
-            // Remove any extra whitespace and extract just the ID
             return cellValue.trim();
         }
 
@@ -560,43 +264,14 @@
                     return;
                 }
 
-                // Update stats
-                document.getElementById('total-count').textContent = allData.length;
-                const locations = new Set(allData.map(d => d.location));
-                document.getElementById('location-count').textContent = locations.size;
+                // Sort by newest first
+                allData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
                 // Render gallery
-                filterAndSort();
                 renderGallery();
             } catch (error) {
                 console.error('Error loading data:', error);
-                showError('Could not load data. Check your Sheet ID and ensure the sheet is public.');
-            }
-        }
-
-        // ===== FILTER & SORT =====
-        function filterAndSort() {
-            // Filter by search
-            displayedData = allData.filter(item => {
-                const search = currentSearch.toLowerCase();
-                return item.weedName.toLowerCase().includes(search) || 
-                       item.location.toLowerCase().includes(search);
-            });
-
-            // Sort
-            switch (currentSort) {
-                case 'date-desc':
-                    displayedData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                    break;
-                case 'date-asc':
-                    displayedData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                    break;
-                case 'name-asc':
-                    displayedData.sort((a, b) => a.weedName.localeCompare(b.weedName));
-                    break;
-                case 'name-desc':
-                    displayedData.sort((a, b) => b.weedName.localeCompare(a.weedName));
-                    break;
+                showError('Could not load data. Check your Sheet ID.');
             }
         }
 
@@ -604,20 +279,20 @@
         function renderGallery() {
             const gallery = document.getElementById('gallery');
 
-            if (displayedData.length === 0) {
+            if (allData.length === 0) {
                 gallery.innerHTML = `
                     <div class="empty-state" style="grid-column: 1 / -1;">
                         <div class="empty-state-icon">🌾</div>
                         <h3>No weeds found</h3>
-                        <p>Try adjusting your search or be the first to submit one!</p>
+                        <p>Be the first to submit one!</p>
                     </div>
                 `;
                 return;
             }
 
-            gallery.innerHTML = displayedData.map((item, index) => `
-                <div class="gallery-card" onclick="openModal(${index})">
-                    <img src="${item.imageUrl}" alt="${item.weedName}" class="card-image" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22250%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22280%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2218%22 fill=%22%23999%22%3EImage loading..%3C/text%3E%3C/svg%3E'">
+            gallery.innerHTML = allData.map((item) => `
+                <div class="gallery-card">
+                    <img src="${item.imageUrl}" alt="${item.weedName}" class="card-image" loading="lazy">
                     <div class="card-content">
                         <div class="card-title">${item.weedName}</div>
                         <div class="card-location">📍 ${item.location}</div>
@@ -631,51 +306,6 @@
             `).join('');
         }
 
-        // ===== MODAL FUNCTIONS =====
-        function openModal(index) {
-            const item = displayedData[index];
-            document.getElementById('modal-image').src = item.imageUrl;
-            document.getElementById('modal-title').textContent = item.weedName;
-            document.getElementById('modal-location').textContent = item.location;
-            document.getElementById('modal-date').textContent = item.date;
-            document.getElementById('modal-author').textContent = item.author;
-            document.getElementById('modal-description').textContent = item.description;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-        }
-
-        // ===== EVENT LISTENERS =====
-        document.getElementById('search').addEventListener('input', (e) => {
-            currentSearch = e.target.value;
-            filterAndSort();
-            renderGallery();
-        });
-
-        document.getElementById('sort').addEventListener('change', (e) => {
-            currentSort = e.target.value;
-            filterAndSort();
-            renderGallery();
-        });
-
-        document.getElementById('refresh-btn').addEventListener('click', () => {
-            const btn = document.getElementById('refresh-btn');
-            btn.classList.add('loading');
-            btn.textContent = '⟳ Loading...';
-            loadData();
-            setTimeout(() => {
-                btn.classList.remove('loading');
-                btn.textContent = '🔄 Refresh';
-            }, 1000);
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target.id === 'modal') closeModal();
-        });
-
         // ===== INITIALIZATION =====
         function showEmpty() {
             document.getElementById('gallery').innerHTML = `
@@ -683,7 +313,6 @@
                     <div class="empty-state-icon">🚀</div>
                     <h3>No submissions yet!</h3>
                     <p>Be the first to submit a weed photo.</p>
-                    <a href="#" class="submit-btn" style="margin-top: 20px;">Submit a weed photo</a>
                 </div>
             `;
         }
@@ -694,7 +323,6 @@
                     <div class="empty-state-icon">⚠️</div>
                     <h3>Error loading gallery</h3>
                     <p>${message}</p>
-                    <button class="submit-btn" onclick="location.reload()" style="margin-top: 20px; cursor: pointer;">Try Again</button>
                 </div>
             `;
         }
